@@ -1,1 +1,196 @@
+<!--
+FieldGrid Dashboard
+ONLY USE NODE 1 FOR NOW - WILL EXPAND LATER
+Main user interface for visualizing live sensor data from
+distributed ESP32 FieldGrid nodes.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FieldGrid Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=10">
+</head>
 
+<body>
+  <main class="dashboard">
+
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">🌾 @MrTech15 FieldGrid</p>
+        <h1>FieldGrid v1.1</h1>
+        <p class="subtitle">This version has Temperature/Humidty, firewatch, and vibration monitoring across field nodes.</p>
+      </div>
+
+      <div class="system-pill" id="connectionStatus">
+        ⚪ Waiting for data
+      </div>
+    </header>
+
+    <section class="node-grid">
+
+      <!-- NODE 01 -->
+      <article class="node-card node-one online-glow" id="node01Card">
+        <div class="node-header">
+          <div>
+            <span class="node-label">NODE 01</span>
+            <h2 id="node01NameDisplay">Field Node Alpha</h2>
+          </div>
+          <span class="live-badge" id="node01Status">🟢 Set</span>
+        </div>
+
+        <div class="rename-box">
+          <input id="node01NameInput" type="text" placeholder="Rename Node 01">
+          <button onclick="saveNodeName('node01')">Save</button>
+        </div>
+
+        <div class="sensor-bubbles">
+          <div class="sensor-pill">
+            <span>🌡️</span>
+            <div>
+              <small>Temperature</small>
+              <strong><span id="temperature">--</span> °C</strong>
+            </div>
+          </div>
+
+          <div class="sensor-pill">
+            <span>💧</span>
+            <div>
+              <small>Humidity</small>
+              <strong><span id="humidity">--</span>%</strong>
+            </div>
+          </div>
+
+          <div class="sensor-pill fire" id="flameBubble">
+            <span>🔥</span>
+            <div>
+              <small>Firewatch</small>
+              <strong id="flameStatus">No data yet</strong>
+              <em>Analog: <span id="flameAnalog">--</span></em>
+            </div>
+          </div>
+
+          <div class="sensor-pill vibration" id="vibrationBubble">
+            <span>📳</span>
+            <div>
+              <small>Shock / Vibration</small>
+              <strong id="vibrationStatus">No data yet</strong>
+              <em>State: <span id="vibrationState">--</span></em>
+            </div>
+          </div>
+        </div>
+
+        <div class="node-footer">
+          <span>⏱️ Uptime: <strong id="uptime">--</strong></span>
+          <span>📡 Topic: field/node01/data</span>
+        </div>
+      </article>
+
+
+
+      <!-- Node 2 is summy offline Node. The next commit will have expanded node capabilities --!>
+      <!-- NODE 02 --> 
+      <!-- <article class="node-card node-two offline-card">
+        <div class="node-header">
+          <div>
+            <span class="node-label">NODE 02</span>
+            <h2 id="node02NameDisplay">Field Node Beta</h2>
+          </div>
+          <span class="offline-badge">⚫ Offline</span>
+        </div>
+
+        <div class="rename-box">
+          <input id="node02NameInput" type="text" placeholder="Rename Node 02">
+          <button onclick="saveNodeName('node02')">Save</button>
+        </div>
+
+        <div class="offline-visual">
+          <div class="offline-orb">🛰️</div>
+          <h3>Node not programmed yet</h3>
+          <p>This node is reserved for your second ESP32-S3 module.</p>
+        </div>
+
+        <div class="ghost-sensors">
+          <span>🌡️ Temperature</span>
+          <span>💧 Humidity</span>
+          <span>🔥 Firewatch</span>
+          <span>📳 Vibration</span>
+        </div>
+      </article> -->
+
+<!-- NODE 03 -->
+      <article class="node-card node-three online-glow" id="node03Card">
+        <div class="node-header">
+          <div>
+            <span class="node-label">NODE 03</span>
+            <h2 id="node03NameDisplay">Field Node Alpha</h2>
+          </div>
+          <span class="live-badge" id="node03Status">⚫ Offline</span>
+        </div>
+
+        <div class="rename-box">
+          <input id="node03NameInput" type="text" placeholder="Rename Node 03">
+          <button onclick="saveNodeName('node03')">Save</button>
+        </div>
+
+        <div class="sensor-bubbles">
+          <div class="sensor-pill">
+            <span>🌡️</span>
+            <div>
+              <small>Temperature</small>
+              <strong><span id="temperature">--</span> °C</strong>
+            </div>
+          </div>
+
+          <div class="sensor-pill">
+            <span>💧</span>
+            <div>
+              <small>Humidity</small>
+              <strong><span id="humidity">--</span>%</strong>
+            </div>
+          </div>
+
+          <div class="sensor-pill fire" id="flameBubble">
+            <span>🔥</span>
+            <div>
+              <small>Firewatch</small>
+              <strong id="flameStatus">No data yet</strong>
+              <em>Analog: <span id="flameAnalog">--</span></em>
+            </div>
+          </div>
+
+          <div class="sensor-pill vibration" id="vibrationBubble">
+            <span>📳</span>
+            <div>
+              <small>Shock / Vibration</small>
+              <strong id="vibrationStatus">No data yet</strong>
+              <em>State: <span id="vibrationState">--</span></em>
+            </div>
+          </div>
+        </div>
+
+        <div class="node-footer">
+          <span>⏱️ Uptime: <strong id="uptime">--</strong></span>
+          <span>📡 Topic: field/node03/data</span>
+        </div>
+      </article>
+
+
+
+    </section>
+
+    <section class="data-panel">
+      <div>
+        <h2>Raw JSON Payload</h2>
+        <p>Latest live message received from Node 01.</p>
+      </div>
+      <pre id="rawJson">{}</pre>
+    </section>
+
+  </main>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="{{ url_for('static', filename='script.js') }}?v=10"></script>
+</body>
+</html>
